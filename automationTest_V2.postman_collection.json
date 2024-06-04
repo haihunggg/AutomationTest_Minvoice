@@ -2148,7 +2148,7 @@
 						"exec": [
 							"var token = pm.environment.get(\"token_create\") ;\r",
 							"\r",
-							"pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token });"
+							"pm.request.headers.add({ key: 'Authorization', value: 'Bear ' + token });"
 						],
 						"type": "text/javascript",
 						"packages": {}
