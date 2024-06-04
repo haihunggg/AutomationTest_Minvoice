@@ -1,0 +1,2396 @@
+{
+	"info": {
+		"_postman_id": "e70270f1-3180-46d3-96c2-4dff66b42538",
+		"name": "automationTest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "21923476",
+		"_collection_link": "https://galactic-capsule-976399.postman.co/workspace/Team-Workspace~4fa450e7-77f9-419f-8093-284eab76bcb1/collection/21923476-e70270f1-3180-46d3-96c2-4dff66b42538?action=share&source=collection_link&creator=21923476"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has the required properties\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('code');",
+							"    pm.expect(jsonData).to.have.property('message');",
+							"    pm.expect(jsonData).to.have.property('ok');",
+							"    pm.expect(jsonData).to.have.property('token');",
+							"});",
+							"var responseBody = pm.response.json();",
+							"var token = responseBody.token;",
+							"",
+							"pm.environment.set(\"token_create\", token);",
+							"pm.test(\"Response is a JSON object with data property\", function () {",
+							"    pm.expect(pm.response.json()).to.be.an('object').that.has.property('token');",
+							"});",
+							"",
+							"var req = JSON.parse(request.data);",
+							"pm.test(\"All fields in the request are type of string\"  , function () {",
+							"    Object.values(req).forEach((value) => {",
+							"        pm.expect(value).to.be.a('string');",
+							"    });",
+							"  ",
+							"});",
+							"",
+							"",
+							"// Test to check if the fields code, message, token are of type string",
+							"pm.test(\"Fields code, message, and token are of type string\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(typeof jsonData.code).to.equal('string');",
+							"    pm.expect(typeof jsonData.message).to.equal('string');",
+							"    pm.expect(typeof jsonData.token).to.equal('string');",
+							"});",
+							"",
+							"pm.test(\"Field ok has a boolean value\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.ok).to.be.a('boolean');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "TaxCode",
+						"value": "{{tax_code}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"admin\",\r\n  \"password\": \"Kythuat@123\",\r\n  \"ma_dvcs\": \"VP\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{tax_code}}.minvoice.pro/api/Account/Login",
+					"protocol": "https",
+					"host": [
+						"{{tax_code}}",
+						"minvoice",
+						"pro"
+					],
+					"path": [
+						"api",
+						"Account",
+						"Login"
+					],
+					"query": [
+						{
+							"key": "Conte",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Serial",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"var nameValues = jsonData.data.map(item=>item.khhdon);\r",
+							"pm.environment.set(\"khhdonValues\",nameValues);\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response is a JSON object with data property\", function () {\r",
+							"    pm.expect(pm.response.json()).to.be.an('object').that.has.property('data');\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"var token = pm.environment.get(\"token_create\") ;\r",
+							"//console.log(token);\r",
+							"\r",
+							"pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token });"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bear  {{token_create}}",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Content",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": "https://{{tax_code}}.minvoice.pro/api/Invoice68/GetTypeInvoiceSeries"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"var nameValues = jsonData.items.map(item=>item.name);\r",
+							"pm.environment.set(\"productNames\",nameValues);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://0106026495-998.minvoice.net/api/api/app/product?maxResultCount=50&skipCount=0",
+					"protocol": "https",
+					"host": [
+						"0106026495-998",
+						"minvoice",
+						"net"
+					],
+					"path": [
+						"api",
+						"api",
+						"app",
+						"product"
+					],
+					"query": [
+						{
+							"key": "maxResultCount",
+							"value": "50"
+						},
+						{
+							"key": "skipCount",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// test for request",
+							"pm.test(\"request body has 'editmode' with value 1\",function(){",
+							"    var requestBody = JSON.parse(request.data);",
+							"    pm.expect(requestBody).to.have.property('editmode').to.equal(1);",
+							"});",
+							"pm.test(\"request body has data\",function(){",
+							"    var requestBody = JSON.parse(request.data);",
+							"    pm.expect(requestBody).to.have.property('data');",
+							"});",
+							"pm.test(\"request body has all header required fields and their types are correct\", function () {",
+							"    var requestBody = JSON.parse(request.data);",
+							"",
+							"    requestBody.data.forEach(function(dataItem) {",
+							"        pm.expect(dataItem).to.have.property('key_api');",
+							"        pm.expect(dataItem.inv_invoiceSeries).to.be.a('string');",
+							"        pm.expect(dataItem).to.have.property('so_benh_an');",
+							"        pm.expect(dataItem.lddnbo).to.be.a('string');",
+							"        pm.expect(dataItem.tnvchuyen).to.be.a('string');",
+							"        pm.expect(dataItem.ptvchuyen).to.be.a('string');",
+							"        pm.expect(dataItem.dckhoxuat).to.be.a('string');",
+							"        pm.expect(dataItem.dckhonhap).to.be.a('string');",
+							"        pm.expect(dataItem.sohopdong).to.be.a('string');",
+							"        pm.expect(dataItem).to.have.property('hvtnxhang');",
+							"        pm.expect(dataItem.inv_invoiceIssuedDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+							"        pm.expect(dataItem.inv_currencyCode).to.be.a('string');",
+							"        pm.expect(dataItem.inv_exchangeRate).to.be.a('number');",
+							"        pm.expect(dataItem.inv_TotalAmount).to.be.a('number');",
+							"        pm.expect(dataItem.inv_TotalAmountWithoutVat).to.be.a('number');",
+							"        pm.expect(dataItem.inv_vatAmount).to.be.a('number');",
+							"        pm.expect(dataItem).to.have.property('inv_buyerDisplayName');",
+							"        pm.expect(dataItem).to.have.property('inv_buyerLegalName');",
+							"        pm.expect(dataItem).to.have.property('inv_buyerTaxCode');",
+							"        pm.expect(dataItem).to.have.property('inv_buyerAddressLine');",
+							"        pm.expect(dataItem).to.have.property('inv_buyerEmail');",
+							"        pm.expect(dataItem).to.have.property('inv_buyerBankAccount');",
+							"        pm.expect(dataItem).to.have.property('inv_buyerBankName');",
+							"        pm.expect(dataItem).to.have.property('inv_paymentMethodName');",
+							"        pm.expect(dataItem).to.have.property('amount_to_word');",
+							"    });",
+							"});",
+							"pm.test(\"request body detail has all required fields and their types are correct\", function () {",
+							"    var requestBody = JSON.parse(request.data);",
+							"",
+							"    requestBody.data.forEach(function(dataItem) {",
+							"        dataItem.details.forEach(function(detailItem) {",
+							"            detailItem.data.forEach(function(item) {",
+							"                pm.expect(item.stt_rec0).to.be.a('string');",
+							"            ",
+							"                pm.expect(item.inv_itemName).to.be.a('string');",
+							"                pm.expect(item).to.have.property('inv_unitCode');",
+							"                pm.expect(item).to.have.property('inv_unitCode');",
+							"                pm.expect(item).to.have.property('inv_unitPrice');",
+							"                pm.expect(item).to.have.property('inv_quantity');",
+							"                pm.expect(item).to.have.property('inv_TotalAmountWithoutVat');",
+							"                pm.expect(item).to.have.property('inv_vatAmount');",
+							"                pm.expect(item).to.have.property('inv_TotalAmount');",
+							"                pm.expect(item).to.have.property('inv_discountPercentage');",
+							"                pm.expect(item).to.have.property('inv_discountAmount');",
+							"                pm.expect(item.ma_thue).to.be.a('string');",
+							"            });",
+							"        });",
+							"    });",
+							"});",
+							"",
+							"",
+							"",
+							"// Test for response",
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response is an object with data property\", function () {",
+							"    pm.expect(pm.response.json()).to.be.an('object').that.has.property('data');",
+							"});",
+							"pm.test(\"Response has property 'ok' with value true\", function () {",
+							"    pm.expect(pm.response.json().ok).to.be.true;",
+							"});",
+							"pm.test(\"all top-level response fields are in correct format\", function () {",
+							"    var response = pm.response.json().data;",
+							"    var datetimeRegex = /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/;",
+							"    pm.expect(pm.response.json().data).to.have.property('key_api');",
+							"    pm.expect(response.inv_invoiceAuth_id).to.be.a('string');",
+							"    pm.expect(response.inv_originalId).to.be.a('string');",
+							"    pm.expect(response.inv_invoiceIssuedDate).to.match(datetimeRegex);",
+							"    pm.expect(response.inv_invoiceSeries).to.be.a('string');",
+							"    pm.expect(response.inv_invoiceNumber).to.be.a('number');",
+							"    pm.expect(pm.response.json().data).to.have.property('so_benh_an');",
+							"    pm.expect(response.inv_currencyCode).to.be.a('string');",
+							"    pm.expect(response.inv_exchangeRate).to.be.a('number');",
+							"    pm.expect(response.inv_paymentMethodName).to.be.a('string');",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerDisplayName');",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerLegalName');",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerTaxCode');",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerAddressLine');",
+							"    pm.expect(response.inv_TotalAmount).to.be.a('number');",
+							"    pm.expect(response.inv_discountAmount).to.be.a('number');",
+							"    pm.expect(response.inv_vatAmount).to.be.a('number');",
+							"    pm.expect(response.inv_TotalAmountWithoutVat).to.be.a('number');",
+							"    pm.expect(response.trang_thai).to.be.a('number');",
+							"    pm.expect(response.trang_thai_hd).to.be.a('number');",
+							"    pm.expect(response.sobaomat).to.be.a('string');",
+							"    pm.expect(pm.response.json().data).to.have.property('macqt');",
+							"    pm.expect(response.shdon).to.be.a('number');",
+							"    pm.expect(pm.response.json().data).to.have.property('ten');",
+							"    pm.expect(pm.response.json().data).to.have.property('tnmua');",
+							"    pm.expect(pm.response.json().data).to.have.property('mst');",
+							"    pm.expect(pm.response.json().data).to.have.property('dchi');",
+							"    pm.expect(response.hoadon68_id).to.be.a('string');",
+							"    pm.expect(response.is_tthdon).to.be.a('string');",
+							"    pm.expect(response.tthai).to.be.a('string');",
+							"    pm.expect(response.tgtcthue).to.be.a('number');",
+							"    pm.expect(response.tgtthue).to.be.a('number');",
+							"    pm.expect(response.tgtttbso).to.be.a('number');",
+							"    pm.expect(pm.response.json().data).to.have.property('is_success');",
+							"    pm.expect(pm.response.json().data).to.have.property('note_error');",
+							"    pm.expect(response.id).to.be.a('string');",
+							"    ",
+							"});",
+							"pm.test(\"Response details contain all required fields\", function () {",
+							"    var responseData = pm.response.json().data;",
+							"",
+							"    responseData.details.data.forEach(function(item) {",
+							"        pm.expect(item.tchat).to.be.a('number');",
+							"        pm.expect(item).to.have.property('stt_rec0');",
+							"        pm.expect(item).to.have.property('inv_itemCode');",
+							"        pm.expect(item.inv_itemName).to.be.a('string');",
+							"        pm.expect(item).to.have.property('inv_unitCode');",
+							"        pm.expect(item).to.have.property('inv_quantity');",
+							"        pm.expect(item).to.have.property('inv_unitPrice');",
+							"        pm.expect(item).to.have.property('phidichvu');",
+							"        pm.expect(item.inv_discountPercentage).to.be.a('number');",
+							"        pm.expect(item.inv_discountAmount).to.be.a('number');",
+							"        pm.expect(item.inv_TotalAmountWithoutVat).to.be.a('number');",
+							"        pm.expect(item.ma_thue).to.be.a('string');",
+							"        pm.expect(item.inv_vatAmount).to.be.a('number');",
+							"        pm.expect(item.inv_TotalAmount).to.be.a('number');;",
+							"    });",
+							"});",
+							"",
+							"// Logic",
+							"var jsonData = pm.response.json();",
+							"var authID = jsonData.data.inv_invoiceAuth_id;",
+							"pm.environment.set(\"auth_id\",authID);",
+							"var count = pm.environment.get(\"count\");",
+							"if(count == 1){",
+							"    postman.setNextRequest(\"Sign\")",
+							"}",
+							"pm.environment.set(\"count\",0)",
+							"var requestBody = JSON.parse(request.data);",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var token = pm.environment.get(\"token_create\") ;\r",
+							"//console.log(token);\r",
+							"pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token });\r",
+							"var khhdon = pm.environment.get(\"khhdonValues\");\r",
+							"var randomValue = \"\";\r",
+							"do {\r",
+							"    randomValue = khhdon[Math.floor(Math.random() * khhdon.length)];\r",
+							"} while (!randomValue.includes('24'));\r",
+							"\r",
+							"pm.environment.set(\"randomKhhdon\", randomValue);\r",
+							"//console.log(randomValue)\r",
+							"var productName = pm.environment.get(\"productNames\");\r",
+							"var randomPro = productName[Math.floor(Math.random() * productName.length)];\r",
+							"pm.environment.set(\"randomPrdNa\",randomPro);\r",
+							"const moment = require('moment');\r",
+							"pm.environment.set(\"today\", moment().format(\"yyyy-MM-DD\"));\r",
+							"function generateRandomString(length) {\r",
+							"    var result = '';\r",
+							"    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; // Các ký tự mà chuỗi có thể chứa\r",
+							"    var charactersLength = characters.length;\r",
+							"    for (var i = 0; i < length; i++) {\r",
+							"        result += characters.charAt(Math.floor(Math.random() * charactersLength));\r",
+							"    }\r",
+							"    return result;\r",
+							"}\r",
+							"var length = 10;\r",
+							"var randomString = generateRandomString(length);\r",
+							"pm.environment.set(\"key_api\", randomString);\r",
+							"var requestBodyContent = pm.request.body.raw;\r",
+							"pm.environment.set(\"requestBodyCreate\", requestBodyContent);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"connection": true,
+					"accept-encoding": true,
+					"accept": true,
+					"user-agent": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bear  {{token_create}}",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "TaxCode",
+						"value": "{{tax_code}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"editmode\": 1,\r\n    \"data\": [\r\n        {\r\n            \"inv_invoiceIssuedDate\": \"{{today}}\",\r\n            \"inv_invoiceSeries\": \"{{randomKhhdon}}\",\r\n            \"so_benh_an\": \"123\",\r\n            \"lddnbo\": \"\",\r\n            \"tnvchuyen\": \"\",\r\n            \"ptvchuyen\": \"\",\r\n            \"dckhoxuat\": \"\",\r\n            \"dckhonhap\": \"\",\r\n            \"sohopdong\": \"\",\r\n            \"hvtnxhang\": \"\",\r\n            \"inv_currencyCode\": \"VND\",\r\n            \"inv_exchangeRate\": 1,\r\n            \"inv_paymentMethodName\": \"TM/CK\",\r\n            \"inv_buyerDisplayName\": \"{{$randomFullName}}\",\r\n            \"inv_buyerLegalName\": \"M-INVOICE - KIỂM THỬ HĐĐT CÓ MÃ\",\r\n            \"inv_buyerTaxCode\": \"0106026495-999\",\r\n            \"inv_buyerAddressLine\": \"{{$randomStreetAddress}}\",\r\n            \"inv_buyerEmail\": null,\r\n            \"inv_buyerBankAccount\": \"{{$randomBankAccount}}\",\r\n            \"inv_buyerBankName\": \"{{$randomBankAccountName}}\",\r\n            \"inv_discountAmount\": 0,\r\n            \"inv_TotalAmountWithoutVat\": 0,\r\n            \"inv_vatAmount\": 0,\r\n            \"inv_TotalAmount\": 0,\r\n            \"amount_to_word\": \"Không đồng\",\r\n            \"key_api\": \"{{key_api}}\",\r\n            \"details\": [\r\n                {\r\n                    \"data\": [\r\n                        {\r\n                            \"tchat\": 1,\r\n                            \"stt_rec0\": \"0001\",\r\n                            \"inv_itemCode\": \"\",\r\n                            \"inv_itemName\": \"{{randomPrdNa}}\",\r\n                            \"inv_unitCode\": \"Cái\",\r\n                            \"inv_quantity\": {{$randomInt}},\r\n                            \"inv_unitPrice\": 50000,\r\n                            \"inv_discountPercentage\": 0,\r\n                            \"inv_discountAmount\": 0,\r\n                            \"inv_TotalAmountWithoutVat\": 0.0,\r\n                            \"ma_thue\": \"10\",\r\n                            \"inv_vatAmount\": {{$randomInt}},\r\n                            \"inv_TotalAmount\": {{$randomInt}}\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{tax_code}}.minvoice.pro/api/InvoiceApi78/Save",
+					"protocol": "https",
+					"host": [
+						"{{tax_code}}",
+						"minvoice",
+						"pro"
+					],
+					"path": [
+						"api",
+						"InvoiceApi78",
+						"Save"
+					],
+					"query": [
+						{
+							"key": "Conte",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var token = pm.environment.get(\"token_create\") ;\r",
+							"pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token });\r",
+							"//var authID = pm.environment.get(\"auth_id\") ;"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// test for request\r",
+							"pm.test(\"request body has 'editmode' with value 2\",function(){\r",
+							"    var requestBody = JSON.parse(request.data);\r",
+							"    pm.expect(requestBody).to.have.property('editmode').to.equal('2');\r",
+							"});\r",
+							"pm.test(\"request body has data\",function(){\r",
+							"    var requestBody = JSON.parse(request.data);\r",
+							"    pm.expect(requestBody).to.have.property('data');\r",
+							"});\r",
+							"pm.test(\"request body has all top-level required fields and their types are correct\", function () {\r",
+							"    var requestBody = JSON.parse(request.data);\r",
+							"\r",
+							"    requestBody.data.forEach(function(dataItem) {\r",
+							"         pm.expect(dataItem).to.have.property('key_api');\r",
+							"        pm.expect(dataItem.inv_invoiceSeries).to.be.a('string');\r",
+							"        pm.expect(dataItem).to.have.property('so_benh_an');\r",
+							"        pm.expect(dataItem.lddnbo).to.be.a('string');\r",
+							"        pm.expect(dataItem.tnvchuyen).to.be.a('string');\r",
+							"        pm.expect(dataItem.ptvchuyen).to.be.a('string');\r",
+							"        pm.expect(dataItem.dckhoxuat).to.be.a('string');\r",
+							"        pm.expect(dataItem.dckhonhap).to.be.a('string');\r",
+							"        pm.expect(dataItem.sohopdong).to.be.a('string');\r",
+							"        pm.expect(dataItem).to.have.property('hvtnxhang');\r",
+							"        pm.expect(dataItem.inv_invoiceIssuedDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);\r",
+							"        pm.expect(dataItem.inv_currencyCode).to.be.a('string');\r",
+							"        pm.expect(dataItem.inv_exchangeRate).to.be.a('number');\r",
+							"        pm.expect(dataItem.inv_TotalAmount).to.be.a('number');\r",
+							"        pm.expect(dataItem.inv_TotalAmountWithoutVat).to.be.a('number');\r",
+							"        pm.expect(dataItem.inv_vatAmount).to.be.a('number');\r",
+							"        pm.expect(dataItem).to.have.property('inv_buyerDisplayName');\r",
+							"        pm.expect(dataItem).to.have.property('inv_buyerLegalName');\r",
+							"        pm.expect(dataItem).to.have.property('inv_buyerTaxCode');\r",
+							"        pm.expect(dataItem).to.have.property('inv_buyerAddressLine');\r",
+							"        pm.expect(dataItem).to.have.property('inv_buyerEmail');\r",
+							"        pm.expect(dataItem).to.have.property('inv_buyerBankAccount');\r",
+							"        pm.expect(dataItem).to.have.property('inv_buyerBankName');\r",
+							"        pm.expect(dataItem).to.have.property('inv_paymentMethodName');\r",
+							"    });\r",
+							"});\r",
+							"pm.test(\"request body has all detail required fields and their types are correct\", function () {\r",
+							"    var requestBody = JSON.parse(request.data);\r",
+							"\r",
+							"    requestBody.data.forEach(function(dataItem) {\r",
+							"        dataItem.details.forEach(function(detailItem) {\r",
+							"            detailItem.data.forEach(function(item) {\r",
+							"                pm.expect(item.stt_rec0).to.be.a('string');\r",
+							"            \r",
+							"                pm.expect(item.inv_itemName).to.be.a('string');\r",
+							"                pm.expect(item).to.have.property('inv_unitCode');\r",
+							"                pm.expect(item).to.have.property('inv_unitCode');\r",
+							"                pm.expect(item).to.have.property('inv_unitPrice');\r",
+							"                pm.expect(item).to.have.property('inv_quantity');\r",
+							"                pm.expect(item).to.have.property('inv_TotalAmountWithoutVat');\r",
+							"                pm.expect(item).to.have.property('inv_vatAmount');\r",
+							"                pm.expect(item).to.have.property('inv_TotalAmount');\r",
+							"                pm.expect(item).to.have.property('inv_discountPercentage');\r",
+							"                pm.expect(item).to.have.property('inv_discountAmount');\r",
+							"                pm.expect(item.ma_thue).to.be.a('string');\r",
+							"            });\r",
+							"        });\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"// Test for response\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response is an object with data property\", function () {\r",
+							"    pm.expect(pm.response.json()).to.be.an('object').that.has.property('data');\r",
+							"});\r",
+							"pm.test(\"Response has property 'ok' with value true\", function () {\r",
+							"    pm.expect(pm.response.json().ok).to.be.true;\r",
+							"});\r",
+							"pm.test(\"all top-level response fields are in correct format\", function () {\r",
+							"    var response = pm.response.json().data;\r",
+							"    var datetimeRegex = /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/;\r",
+							"    pm.expect(pm.response.json().data).to.have.property('key_api');\r",
+							"    pm.expect(response.inv_invoiceAuth_id).to.be.a('string');\r",
+							"    pm.expect(response.inv_originalId).to.be.a('string');\r",
+							"    pm.expect(response.inv_invoiceIssuedDate).to.match(datetimeRegex);\r",
+							"    pm.expect(response.inv_invoiceSeries).to.be.a('string');\r",
+							"    pm.expect(response.inv_invoiceNumber).to.be.a('number');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('so_benh_an');\r",
+							"    pm.expect(response.inv_currencyCode).to.be.a('string');\r",
+							"    pm.expect(response.inv_exchangeRate).to.be.a('number');\r",
+							"    pm.expect(response.inv_paymentMethodName).to.be.a('string');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerDisplayName');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerLegalName');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerTaxCode');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerAddressLine');\r",
+							"    pm.expect(response.inv_TotalAmount).to.be.a('number');\r",
+							"    pm.expect(response.inv_discountAmount).to.be.a('number');\r",
+							"    pm.expect(response.inv_vatAmount).to.be.a('number');\r",
+							"    pm.expect(response.inv_TotalAmountWithoutVat).to.be.a('number');\r",
+							"    pm.expect(response.trang_thai).to.be.a('number');\r",
+							"    pm.expect(response.trang_thai_hd).to.be.a('number');\r",
+							"    pm.expect(response.sobaomat).to.be.a('string');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('macqt');\r",
+							"    pm.expect(response.shdon).to.be.a('number');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('ten');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('tnmua');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('mst');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('dchi');\r",
+							"    pm.expect(response.hoadon68_id).to.be.a('string');\r",
+							"    pm.expect(response.is_tthdon).to.be.a('string');\r",
+							"    pm.expect(response.tthai).to.be.a('string');\r",
+							"    pm.expect(response.tgtcthue).to.be.a('number');\r",
+							"    pm.expect(response.tgtthue).to.be.a('number');\r",
+							"    pm.expect(response.tgtttbso).to.be.a('number');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('is_success');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('note_error');\r",
+							"    pm.expect(response.id).to.be.a('string');\r",
+							"    \r",
+							"});\r",
+							"pm.test(\"Response details contain all required fields\", function () {\r",
+							"    var responseData = pm.response.json().data;\r",
+							"\r",
+							"    responseData.details.data.forEach(function(item) {\r",
+							"        pm.expect(item.tchat).to.be.a('number');\r",
+							"        pm.expect(item).to.have.property('stt_rec0');\r",
+							"        pm.expect(item).to.have.property('inv_itemCode');\r",
+							"        pm.expect(item.inv_itemName).to.be.a('string');\r",
+							"        pm.expect(item).to.have.property('inv_unitCode');\r",
+							"        pm.expect(item).to.have.property('inv_quantity');\r",
+							"        pm.expect(item).to.have.property('inv_unitPrice');\r",
+							"        pm.expect(item).to.have.property('phidichvu');\r",
+							"        pm.expect(item.inv_discountPercentage).to.be.a('number');\r",
+							"        pm.expect(item.inv_discountAmount).to.be.a('number');\r",
+							"        pm.expect(item.inv_TotalAmountWithoutVat).to.be.a('number');\r",
+							"        pm.expect(item.ma_thue).to.be.a('string');\r",
+							"        pm.expect(item.inv_vatAmount).to.be.a('number');\r",
+							"        pm.expect(item.inv_TotalAmount).to.be.a('number');;\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bear  {{token_create}}",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "TaxCode",
+						"value": "{{token_create}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"editmode\": \"2\",\r\n  \"data\": [\r\n    {\r\n        \"inv_invoiceAuth_id\": \"{{auth_id}}\",\r\n      \"inv_invoiceSeries\": \"{{randomKhhdon}}\",\r\n      \"mau_hd\": \"01GTKT0/001\",\r\n      \"inv_invoiceNumber\": \"\",\r\n      \"key_api\": \"{{key_api}}\",\r\n      \"so_benh_an\": \"\",\r\n      \"lddnbo\": \"\",\r\n      \"tnvchuyen\": \"\",\r\n      \"ptvchuyen\": \"\",\r\n      \"dckhoxuat\": \"\",\r\n      \"dckhonhap\": \"\",\r\n      \"sohopdong\": \"\",\r\n      \"hvtnxhang\": \"\",\r\n      \"inv_invoiceIssuedDate\": \"{{today}}\",\r\n      \"inv_buyerDisplayName\": \"\",\r\n      \"inv_buyerLegalName\": \"Thu ngân nhà hàng\",\r\n      \"inv_buyerTaxCode\": \"\",\r\n      \"inv_buyerAddressLine\": \"ABC\",\r\n      \"inv_buyerEmail\": \"\",\r\n      \"inv_buyerBankAccount\": \"\",\r\n      \"inv_buyerBankName\": \"\",\r\n      \"inv_invoiceNote\": \"\",\r\n      \"inv_currencyCode\": \"VND\",\r\n      \"inv_exchangeRate\": 1.0000,\r\n      \"ma_dt\": \"9999\",\r\n      \"inv_paymentMethodName\": \"TM/CK\",\r\n      \"inv_sellerBankAccount\": \"\",\r\n      \"inv_sellerBankName\": \"\",\r\n      \"inv_TotalAmountWithoutVat\": 72727.0000,\r\n      \"inv_vatAmount\": 7273.0000,\r\n      \"inv_TotalAmount\": 80000.0000,\r\n      \"inv_discountAmount\": 0.0000,\r\n      \"phi_dich_vu\": 0.0000,\r\n      \"details\": [\r\n        {\r\n          \"data\": [\r\n            {\r\n              \"tchat\": 1,\r\n              \"stt_rec0\": \"0001\",\r\n              \"inv_itemCode\": \"ITEM-Z1GP\",\r\n              \"inv_itemName\": \"Bia chai Sài Gòn\",\r\n              \"inv_unitCode\": \"Chai\",\r\n              \"inv_unitName\": \"Chai\",\r\n              \"inv_unitPrice\": 18181.82,\r\n              \"inv_quantity\": 4.0000,\r\n              \"inv_Amount\": 72727.0000,\r\n              \"inv_SaleCost\": 0,\r\n              \"inv_TotalAmountWithoutVat\": 72727.0000,\r\n              \"inv_vatAmount\": 7272.70000000,\r\n              \"inv_TotalAmount\": 79999.70000000,\r\n              \"inv_discountPercentage\": 0,\r\n              \"inv_discountAmount\": 0,\r\n              \"inv_promotion\": false,\r\n              \"ma_thue\": \"10\"\r\n            }\r\n          ]\r\n         \r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{tax_code}}.minvoice.pro/api/InvoiceApi78/Save",
+					"protocol": "https",
+					"host": [
+						"{{tax_code}}",
+						"minvoice",
+						"pro"
+					],
+					"path": [
+						"api",
+						"InvoiceApi78",
+						"Save"
+					],
+					"query": [
+						{
+							"key": "Conte",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var token = pm.environment.get(\"token_create\") ;\r",
+							"pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token });"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has property 'ok' with value true\", function () {\r",
+							"    pm.expect(pm.response.json().ok).to.be.true;\r",
+							"});\r",
+							"postman.setNextRequest(\"Create\");\r",
+							"var delCount = 0 ;\r",
+							"delCount = delCount + 1;\r",
+							"pm.environment.set(\"count\",delCount)\r",
+							"// test for request\r",
+							"var req = JSON.parse(request.data);\r",
+							"pm.test(\"editmode in requestBody is type of number\", function(){\r",
+							"    pm.expect(req.editmode).to.be.a('number')\r",
+							"});\r",
+							"pm.test(\"inv_invoiceAuth_id & inv_invoiceSeries in requestBody are type of string\", function(){\r",
+							"    pm.expect(req.data[0].inv_invoiceAuth_id).to.be.a('string');\r",
+							"    pm.expect(req.data[0].inv_invoiceSeries).to.be.a('string');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bear 2717F2F9131748FAB215FC7DFF7DA4CC",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "TaxCode",
+						"value": "0106026495-999",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"editmode\": 3,\r\n  \"data\": [\r\n    {\r\n      \"inv_invoiceAuth_id\":\"{{auth_id}}\",\r\n      \"inv_invoiceSeries\" : \"{{randomKhhdon}}\"\r\n      \r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{tax_code}}.minvoice.pro/api/InvoiceApi78/Save",
+					"protocol": "https",
+					"host": [
+						"{{tax_code}}",
+						"minvoice",
+						"pro"
+					],
+					"path": [
+						"api",
+						"InvoiceApi78",
+						"Save"
+					],
+					"query": [
+						{
+							"key": "Conte",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sign",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var token = pm.environment.get(\"token_create\") ;\r",
+							"pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token });\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// test for request",
+							"",
+							"var req = JSON.parse(request.data);",
+							"pm.test(\"hoadon68_id field in the request is type of string\"  , function () {",
+							"    Object.values(req).forEach((value) => {",
+							"        pm.expect(value).to.be.a('string');",
+							"    });",
+							"  ",
+							"});",
+							"",
+							"// test for response",
+							"pm.test(\"Response is in JSON format\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has property 'ok' with value true\", function () {",
+							"    pm.expect(pm.response.json().ok).to.be.true;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bear O87316arj5+Od3Fqyy5hzdBfIuPk73eKqpAzBSvv8sY=",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "TaxCode",
+						"value": "0106026495-998",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"hoadon68_id\": \"{{auth_id}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{tax_code}}.minvoice.pro/api/InvoiceApi78/Sign",
+					"protocol": "https",
+					"host": [
+						"{{tax_code}}",
+						"minvoice",
+						"pro"
+					],
+					"path": [
+						"api",
+						"InvoiceApi78",
+						"Sign"
+					],
+					"query": [
+						{
+							"key": "Conte",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SaveSign",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// test for request",
+							"pm.test(\"request body has 'editmode' with value 1\",function(){",
+							"    var requestBody = JSON.parse(request.data);",
+							"    pm.expect(requestBody).to.have.property('editmode').to.equal(1);",
+							"});",
+							"pm.test(\"request body has data\",function(){",
+							"    var requestBody = JSON.parse(request.data);",
+							"    pm.expect(requestBody).to.have.property('data');",
+							"});",
+							"pm.test(\"request body has all top-level required fields and their types are correct\", function () {",
+							"    var requestBody = JSON.parse(request.data);",
+							"",
+							"    requestBody.data.forEach(function(dataItem) {",
+							"        pm.expect(dataItem).to.have.property('key_api');",
+							"        pm.expect(dataItem.inv_invoiceSeries).to.be.a('string');",
+							"        pm.expect(dataItem.inv_invoiceIssuedDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+							"        pm.expect(dataItem.inv_currencyCode).to.be.a('string');",
+							"        pm.expect(dataItem.inv_exchangeRate).to.be.a('number');",
+							"        pm.expect(dataItem.inv_TotalAmount).to.be.a('number');",
+							"        pm.expect(dataItem.inv_TotalAmountWithoutVat).to.be.a('number');",
+							"        pm.expect(dataItem.inv_vatAmount).to.be.a('number');",
+							"        pm.expect(dataItem).to.have.property('inv_buyerDisplayName');",
+							"        pm.expect(dataItem).to.have.property('inv_buyerLegalName');",
+							"        pm.expect(dataItem).to.have.property('inv_buyerTaxCode');",
+							"        pm.expect(dataItem).to.have.property('inv_buyerAddressLine');",
+							"        pm.expect(dataItem).to.have.property('inv_buyerEmail');",
+							"        pm.expect(dataItem).to.have.property('inv_buyerBankAccount');",
+							"        pm.expect(dataItem).to.have.property('inv_buyerBankName');",
+							"        pm.expect(dataItem).to.have.property('inv_paymentMethodName');",
+							"        pm.expect(dataItem).to.have.property('amount_to_word');",
+							"    });",
+							"});",
+							"pm.test(\"request body has all detail required fields and their types are correct\", function () {",
+							"    var requestBody = JSON.parse(request.data);",
+							"",
+							"    requestBody.data.forEach(function(dataItem) {",
+							"        dataItem.details.forEach(function(detailItem) {",
+							"            detailItem.data.forEach(function(item) {",
+							"                pm.expect(item.stt_rec0).to.be.a('string');",
+							"            ",
+							"                pm.expect(item.inv_itemName).to.be.a('string');",
+							"                pm.expect(item).to.have.property('inv_unitCode');",
+							"                pm.expect(item).to.have.property('inv_unitCode');",
+							"                pm.expect(item).to.have.property('inv_unitPrice');",
+							"                pm.expect(item).to.have.property('inv_quantity');",
+							"                pm.expect(item).to.have.property('inv_TotalAmountWithoutVat');",
+							"                pm.expect(item).to.have.property('inv_vatAmount');",
+							"                pm.expect(item).to.have.property('inv_TotalAmount');",
+							"                pm.expect(item).to.have.property('inv_discountPercentage');",
+							"                pm.expect(item).to.have.property('inv_discountAmount');",
+							"                pm.expect(item.ma_thue).to.be.a('string');",
+							"            });",
+							"        });",
+							"    });",
+							"});",
+							"",
+							"// Test for response",
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response is an object with data property\", function () {",
+							"    pm.expect(pm.response.json()).to.be.an('object').that.has.property('data');",
+							"});",
+							"pm.test(\"Response has property 'ok' with value true\", function () {",
+							"    pm.expect(pm.response.json().ok).to.be.true;",
+							"});",
+							"pm.test(\"all top-level response fields are in correct format\", function () {",
+							"    var response = pm.response.json().data;",
+							"    var datetimeRegex = /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/;",
+							"    pm.expect(pm.response.json().data).to.have.property('key_api');",
+							"    pm.expect(response.inv_invoiceAuth_id).to.be.a('string');",
+							"    pm.expect(response.inv_originalId).to.be.a('string');",
+							"    pm.expect(response.inv_invoiceIssuedDate).to.match(datetimeRegex);",
+							"    pm.expect(response.inv_invoiceSeries).to.be.a('string');",
+							"    pm.expect(response.inv_invoiceNumber).to.be.a('number');",
+							"    pm.expect(pm.response.json().data).to.have.property('so_benh_an');",
+							"    pm.expect(response.inv_currencyCode).to.be.a('string');",
+							"    pm.expect(response.inv_exchangeRate).to.be.a('number');",
+							"    pm.expect(response.inv_paymentMethodName).to.be.a('string');",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerDisplayName');",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerLegalName');",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerTaxCode');",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerAddressLine');",
+							"    pm.expect(response.inv_TotalAmount).to.be.a('number');",
+							"    pm.expect(response.inv_discountAmount).to.be.a('number');",
+							"    pm.expect(response.inv_vatAmount).to.be.a('number');",
+							"    pm.expect(response.inv_TotalAmountWithoutVat).to.be.a('number');",
+							"    pm.expect(response.trang_thai).to.be.a('number');",
+							"    pm.expect(response.trang_thai_hd).to.be.a('number');",
+							"    pm.expect(response.sobaomat).to.be.a('string');",
+							"    pm.expect(pm.response.json().data).to.have.property('macqt');",
+							"    pm.expect(response.shdon).to.be.a('number');",
+							"    pm.expect(pm.response.json().data).to.have.property('ten');",
+							"    pm.expect(pm.response.json().data).to.have.property('tnmua');",
+							"    pm.expect(pm.response.json().data).to.have.property('mst');",
+							"    pm.expect(pm.response.json().data).to.have.property('dchi');",
+							"    pm.expect(response.hoadon68_id).to.be.a('string');",
+							"    pm.expect(response.is_tthdon).to.be.a('string');",
+							"    pm.expect(response.tthai).to.be.a('string');",
+							"    pm.expect(response.tgtcthue).to.be.a('number');",
+							"    pm.expect(response.tgtthue).to.be.a('number');",
+							"    pm.expect(response.tgtttbso).to.be.a('number');",
+							"    pm.expect(pm.response.json().data).to.have.property('is_success');",
+							"    pm.expect(pm.response.json().data).to.have.property('note_error');",
+							"    pm.expect(response.id).to.be.a('string');",
+							"    ",
+							"});",
+							"pm.test(\"Response details contain all required fields\", function () {",
+							"    var responseData = pm.response.json().data;",
+							"",
+							"    responseData.details.data.forEach(function(item) {",
+							"        pm.expect(item.tchat).to.be.a('number');",
+							"        pm.expect(item).to.have.property('stt_rec0');",
+							"        pm.expect(item).to.have.property('inv_itemCode');",
+							"        pm.expect(item.inv_itemName).to.be.a('string');",
+							"        pm.expect(item).to.have.property('inv_unitCode');",
+							"        pm.expect(item).to.have.property('inv_quantity');",
+							"        pm.expect(item).to.have.property('inv_unitPrice');",
+							"        pm.expect(item).to.have.property('phidichvu');",
+							"        pm.expect(item.inv_discountPercentage).to.be.a('number');",
+							"        pm.expect(item.inv_discountAmount).to.be.a('number');",
+							"        pm.expect(item.inv_TotalAmountWithoutVat).to.be.a('number');",
+							"        pm.expect(item.ma_thue).to.be.a('string');",
+							"        pm.expect(item.inv_vatAmount).to.be.a('number');",
+							"        pm.expect(item.inv_TotalAmount).to.be.a('number');;",
+							"    });",
+							"});",
+							"",
+							"//logic",
+							"var jsonData = pm.response.json();",
+							"var authID = jsonData.data.inv_invoiceAuth_id;",
+							"pm.environment.set(\"auth_id\",authID);",
+							"var invNum = jsonData.data.inv_invoiceNumber;",
+							"pm.environment.set(\"invNumber\",invNum);",
+							"pm.environment.set(\"countNV\",0);",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var token = pm.environment.get(\"token_create\") ;\r",
+							"//console.log(token);\r",
+							"pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token });\r",
+							"var khhdon = pm.environment.get(\"khhdonValues\");\r",
+							"var randomValue = \"\";\r",
+							"do {\r",
+							"    randomValue = khhdon[Math.floor(Math.random() * khhdon.length)];\r",
+							"} while (!randomValue.includes('24'));\r",
+							"\r",
+							"pm.environment.set(\"randomKhhdon\", randomValue);\r",
+							"//console.log(randomValue)\r",
+							"var productName = pm.environment.get(\"productNames\");\r",
+							"var randomPro = productName[Math.floor(Math.random() * productName.length)];\r",
+							"pm.environment.set(\"randomPrdNa\",randomPro);\r",
+							"const moment = require('moment');\r",
+							"pm.environment.set(\"today\", moment().format(\"yyyy-MM-DD\"));\r",
+							"function generateRandomString(length) {\r",
+							"    var result = '';\r",
+							"    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; // Các ký tự mà chuỗi có thể chứa\r",
+							"    var charactersLength = characters.length;\r",
+							"    for (var i = 0; i < length; i++) {\r",
+							"        result += characters.charAt(Math.floor(Math.random() * charactersLength));\r",
+							"    }\r",
+							"    return result;\r",
+							"}\r",
+							"var length = 10;\r",
+							"var randomString = generateRandomString(length);\r",
+							"pm.environment.set(\"key_api\", randomString);\r",
+							"var requestBodyContent = pm.request.body.raw;\r",
+							"pm.environment.set(\"requestBodyCreate\", requestBodyContent);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"connection": true,
+					"accept-encoding": true,
+					"accept": true,
+					"user-agent": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bear  {{token_create}}",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "TaxCode",
+						"value": "{{tax_code}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"editmode\": 1,\r\n    \"data\": [\r\n        {\r\n            \"inv_invoiceIssuedDate\": \"{{today}}\",\r\n            \"inv_invoiceSeries\": \"{{randomKhhdon}}\",\r\n            \"so_benh_an\": \"123\",\r\n            \"inv_currencyCode\": \"VND\",\r\n            \"inv_exchangeRate\": 1,\r\n            \"inv_paymentMethodName\": \"TM/CK\",\r\n            \"inv_buyerDisplayName\": \"{{$randomFullName}}\",\r\n            \"inv_buyerLegalName\": \"M-INVOICE - KIỂM THỬ HĐĐT CÓ MÃ\",\r\n            \"inv_buyerTaxCode\": \"0106026495-999\",\r\n            \"inv_buyerAddressLine\": \"{{$randomStreetAddress}}\",\r\n            \"inv_buyerEmail\": null,\r\n            \"inv_buyerBankAccount\": \"{{$randomBankAccount}}\",\r\n            \"inv_buyerBankName\": \"{{$randomBankAccountName}}\",\r\n            \"inv_discountAmount\": 0,\r\n            \"inv_TotalAmountWithoutVat\": 0,\r\n            \"inv_vatAmount\": 0,\r\n            \"inv_TotalAmount\": 0,\r\n            \"amount_to_word\": \"Không đồng\",\r\n            \"key_api\":\"{{key_api}}\",\r\n            \"details\": [\r\n                {\r\n                    \"data\": [\r\n                        {\r\n                            \"tchat\": 1,\r\n                            \"stt_rec0\": \"0001\",\r\n                            \"inv_itemCode\": \"\",\r\n                            \"inv_itemName\": \"{{randomPrdNa}}\",\r\n                            \"inv_unitCode\": \"Cái\",\r\n                            \"inv_quantity\": {{$randomInt}},\r\n                            \"inv_unitPrice\": 50000,\r\n                            \"inv_discountPercentage\": 0,\r\n                            \"inv_discountAmount\": 0,\r\n                            \"inv_TotalAmountWithoutVat\": 0.0,\r\n                            \"ma_thue\": \"10\",\r\n                            \"inv_vatAmount\": {{$randomInt}},\r\n                            \"inv_TotalAmount\": {{$randomInt}}\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{tax_code}}.minvoice.pro/api/InvoiceApi78/SaveSign",
+					"protocol": "https",
+					"host": [
+						"{{tax_code}}",
+						"minvoice",
+						"pro"
+					],
+					"path": [
+						"api",
+						"InvoiceApi78",
+						"SaveSign"
+					],
+					"query": [
+						{
+							"key": "Conte",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Info By Date",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var token = pm.environment.get(\"token_create\") ;\r",
+							"pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token });\r",
+							"var khhdon = pm.environment.get(\"khhdonValues\");\r",
+							"var randomValue = \"\";\r",
+							"do {\r",
+							"    randomValue = khhdon[Math.floor(Math.random() * khhdon.length)];\r",
+							"} while (!randomValue.includes('1C24'));\r",
+							"var today = pm.environment.get(\"today\")\r",
+							"var tungay = new Date(today);\r",
+							"tungay.setDate(tungay.getDate() - 300);\r",
+							"\r",
+							"var formattedTungay = tungay.toISOString().slice(0,10);\r",
+							"\r",
+							"\r",
+							"pm.environment.set(\"fromday\", formattedTungay);\r",
+							"\r",
+							"pm.environment.set(\"randomKhhdon\", randomValue);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// test for request",
+							"var req = JSON.parse(request.data);",
+							"pm.test(\"khieu in body request is type of string\", function () {",
+							"     pm.expect(req.khieu).to.be.a('string');",
+							"    ",
+							"});",
+							"pm.test(\"tuNgay and denNgay in body request are type of Datetime\", function () {",
+							"     pm.expect(req.tuNgay).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+							"     pm.expect(req.denNgay).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+							"});",
+							"",
+							"",
+							"",
+							"// Test for response",
+							"",
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response has property 'ok' with value true\", function () {",
+							"    pm.expect(pm.response.json().ok).to.be.true;",
+							"});",
+							"pm.test(\"Response is a JSON object with data property\", function () {",
+							"    pm.expect(pm.response.json()).to.be.an('object').that.has.property('data');",
+							"});",
+							"pm.test(\"Response has total field and its type is number\", function () {",
+							"    pm.expect(pm.response.json().total).to.be.a('number');",
+							"});",
+							"",
+							"",
+							"",
+							"// --------------------------------------------------",
+							"",
+							"var jsonData = pm.response.json();",
+							"var invoiceAuthIds = [];",
+							"var count = 0;",
+							"",
+							"",
+							"jsonData.data.forEach(function(invoice) {",
+							"    if (count < 3 && invoice.is_tthdon == \"0\" && invoice.trang_thai == \"4\" && invoice.is_success == \"1\") {",
+							"        var invoiceAuthId = invoice.inv_invoiceAuth_id;",
+							"        invoiceAuthIds.push(invoiceAuthId);",
+							"        count++;",
+							"    }",
+							"});",
+							"pm.environment.set(\"auth_id0\", invoiceAuthIds[0]);",
+							"pm.environment.set(\"auth_id1\", invoiceAuthIds[1]);",
+							"pm.environment.set(\"auth_id2\", invoiceAuthIds[2]);",
+							"// Test to check if the response has all fields in the data",
+							"pm.test(\"Response data has all required fields\", function () {",
+							"    var responseData = pm.response.json().data;",
+							"    responseData.forEach(function(invoice) {",
+							"    pm.expect(invoice).to.have.property('key_api');",
+							"    pm.expect(invoice).to.have.property('inv_invoiceAuth_id');",
+							"    pm.expect(invoice).to.have.property('inv_originalId');",
+							"    pm.expect(invoice).to.have.property('inv_invoiceIssuedDate');",
+							"    pm.expect(invoice).to.have.property('inv_invoiceSeries');",
+							"    pm.expect(invoice).to.have.property('inv_invoiceNumber');",
+							"    pm.expect(invoice).to.have.property('so_benh_an');",
+							"    pm.expect(invoice).to.have.property('inv_currencyCode');",
+							"    pm.expect(invoice).to.have.property('inv_exchangeRate');",
+							"    pm.expect(invoice).to.have.property('inv_paymentMethodName');",
+							"    pm.expect(invoice).to.have.property('inv_buyerDisplayName');",
+							"    pm.expect(invoice).to.have.property('inv_buyerLegalName');",
+							"    pm.expect(invoice).to.have.property('inv_buyerTaxCode');",
+							"    pm.expect(invoice).to.have.property('inv_buyerAddressLine');",
+							"    pm.expect(invoice).to.have.property('inv_buyerEmail');",
+							"    pm.expect(invoice).to.have.property('inv_buyerBankAccount');",
+							"    pm.expect(invoice).to.have.property('inv_buyerBankName');",
+							"    pm.expect(invoice).to.have.property('OrtherTax');",
+							"    pm.expect(invoice).to.have.property('environmentalProtectionFee');",
+							"    pm.expect(invoice).to.have.property('connectorMaintenanceFee');",
+							"    pm.expect(invoice).to.have.property('drainageFee');",
+							"    pm.expect(invoice).to.have.property('serviceCharge');",
+							"    pm.expect(invoice).to.have.property('deductionAmount');",
+							"    pm.expect(invoice).to.have.property('ortherFee');",
+							"    pm.expect(invoice).to.have.property('deductionVatamount');",
+							"    pm.expect(invoice).to.have.property('inv_TotalAmount');",
+							"    pm.expect(invoice).to.have.property('inv_discountAmount');",
+							"    pm.expect(invoice).to.have.property('inv_vatAmount');",
+							"    pm.expect(invoice).to.have.property('inv_TotalAmountWithoutVat');",
+							"    pm.expect(invoice).to.have.property('trang_thai');",
+							"    pm.expect(invoice).to.have.property('trang_thai_hd');",
+							"    pm.expect(invoice).to.have.property('sobaomat');",
+							"    pm.expect(invoice).to.have.property('macqt');",
+							"    pm.expect(invoice).to.have.property('shdon');",
+							"    pm.expect(invoice).to.have.property('ten');",
+							"    pm.expect(invoice).to.have.property('tnmua');",
+							"    pm.expect(invoice).to.have.property('mst');",
+							"    pm.expect(invoice).to.have.property('dchi');",
+							"    pm.expect(invoice).to.have.property('buyerTel');",
+							"    pm.expect(invoice).to.have.property('buyerIdentityCard');",
+							"    pm.expect(invoice).to.have.property('email');",
+							"    pm.expect(invoice).to.have.property('hoadon68_id');",
+							"    pm.expect(invoice).to.have.property('is_tthdon');",
+							"    pm.expect(invoice).to.have.property('tthai');",
+							"    pm.expect(invoice).to.have.property('tgtcthue');",
+							"    pm.expect(invoice).to.have.property('tgtthue');",
+							"    pm.expect(invoice).to.have.property('tgtttbso');",
+							"    pm.expect(invoice).to.have.property('ghi_chu');",
+							"    pm.expect(invoice).to.have.property('is_success');",
+							"    pm.expect(invoice).to.have.property('note_error');",
+							"    pm.expect(invoice).to.have.property('id');",
+							"    pm.expect(invoice).to.have.property('phong');",
+							"    pm.expect(invoice).to.have.property('doan');",
+							"    pm.expect(invoice).to.have.property('ngayden');",
+							"    pm.expect(invoice).to.have.property('ngaydi');",
+							"    pm.expect(invoice).to.have.property('phidv');",
+							"    pm.expect(invoice).to.have.property('nonTaxZone');",
+							"    pm.expect(invoice).to.have.property('so_phong');",
+							"    pm.expect(invoice).to.have.property('so_folio');",
+							"    pm.expect(invoice).to.have.property('inv_arrivalDate');",
+							"    pm.expect(invoice).to.have.property('inv_departureDate');",
+							"    pm.expect(invoice).to.have.property('tencuahang');",
+							"    pm.expect(invoice).to.have.property('dchicuahang');",
+							"    pm.expect(invoice).to.have.property('macuahang');",
+							"    pm.expect(invoice).to.have.property('ma_dt');",
+							"    pm.expect(invoice).to.have.property('ma_voi_bom');",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bear 0106026495998d3Fqyy5hzdBfIuPk73eKqpAzBSvv8sY=",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "TaxCode",
+						"value": "0106026495-998",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"tuNgay\": \"{{fromday}}\",\r\n    \"denNgay\": \"{{today}}\",\r\n    \"khieu\": \"{{randomKhhdon}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://{{tax_code}}.minvoice.pro/api/InvoiceApi78/GetInvoices"
+			},
+			"response": []
+		},
+		{
+			"name": "Điều chỉnh",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var token = pm.environment.get(\"token_create\") ;\r",
+							"pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token });\r",
+							"// var invoiceAuthId = pm.environment.get(\"auth_id\");\r",
+							"// var invoiceSeries =pm.environment.get(\"randomKhhdon\");\r",
+							"// var invoiceNum = pm.environment.get(\"invNumber\");\r",
+							"// console.log(invoiceAuthId);\r",
+							"// console.log(invoiceSeries);\r",
+							"// console.log(invoiceNum); "
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test for request",
+							"pm.test(\"Request body has all Top-level required fields and their types are correct\", function () {",
+							"    var requestBody = JSON.parse(request.data);",
+							"    pm.expect(requestBody.inv_InvoiceAuth_id).to.be.a('string');",
+							"    pm.expect(requestBody.inv_invoiceIssuedDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+							"    pm.expect(requestBody.inv_invoiceSeries).to.be.a('string');",
+							"    pm.expect(requestBody).to.have.property('so_benh_an');",
+							"    pm.expect(requestBody).to.have.property('inv_currencyCode');",
+							"    pm.expect(requestBody).to.have.property('inv_exchangeRate');",
+							"    pm.expect(requestBody).to.have.property('inv_paymentMethodName');",
+							"    pm.expect(requestBody).to.have.property('inv_buyerDisplayName');",
+							"    pm.expect(requestBody).to.have.property('inv_buyerLegalName');",
+							"    pm.expect(requestBody).to.have.property('inv_buyerTaxCode');",
+							"    pm.expect(requestBody).to.have.property('inv_buyerAddressLine');",
+							"    pm.expect(requestBody).to.have.property('inv_buyerEmail');",
+							"    pm.expect(requestBody).to.have.property('inv_buyerBankAccount');",
+							"    pm.expect(requestBody).to.have.property('inv_buyerBankName');",
+							"    pm.expect(requestBody).to.have.property('inv_discountAmount');",
+							"    pm.expect(requestBody.inv_TotalAmountWithoutVat).to.be.a('number');",
+							"    pm.expect(requestBody.inv_vatAmount).to.be.a('number');",
+							"    pm.expect(requestBody.inv_TotalAmount).to.be.a('number');",
+							"    pm.expect(requestBody).to.have.property('data');",
+							"",
+							"",
+							"",
+							"});",
+							"",
+							"pm.test(\"request body has all detail required fields and their types are correct\", function () {",
+							"    var requestBody = JSON.parse(request.data);",
+							"",
+							"    requestBody.data.forEach(function (dataItem) {",
+							"        ",
+							"                \t\t\t\tpm.expect(dataItem.stt).to.be.a('string');",
+							"                pm.expect(dataItem).to.have.property('ma');",
+							"                pm.expect(dataItem.inv_itemName).to.be.a('string');",
+							"                pm.expect(dataItem).to.have.property('inv_unitCode');",
+							"                pm.expect(dataItem).to.have.property('inv_unitName');",
+							"                pm.expect(dataItem).to.have.property('inv_unitPrice');",
+							"                pm.expect(dataItem).to.have.property('inv_quantity');",
+							"                pm.expect(dataItem).to.have.property('inv_TotalAmountWithoutVat');",
+							"                pm.expect(dataItem).to.have.property('inv_vatAmount');",
+							"                pm.expect(dataItem).to.have.property('inv_TotalAmount');",
+							"                pm.expect(dataItem).to.have.property('inv_promotion');",
+							"                pm.expect(dataItem).to.have.property('inv_discountPercentage');",
+							"                pm.expect(dataItem).to.have.property('inv_discountAmount');",
+							"                pm.expect(dataItem.ma_thue).to.be.a('string');",
+							"    });",
+							"});",
+							"",
+							"//Test for response",
+							"",
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is an object with data property\", function () {",
+							"    pm.expect(pm.response.json()).to.be.an('object').that.has.property('data');",
+							"});",
+							"",
+							"pm.test(\"Response has property 'ok' with value true\", function () {",
+							"    pm.expect(pm.response.json().ok).to.be.true;",
+							"});",
+							"pm.test(\"all top-level response fields are in correct format\", function () {",
+							"    var response = pm.response.json().data;",
+							"    var datetimeRegex = /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/;",
+							"    pm.expect(pm.response.json().data).to.have.property('key_api');",
+							"    pm.expect(response.inv_invoiceAuth_id).to.be.a('string');",
+							"    pm.expect(response.inv_originalId).to.be.a('string');",
+							"    pm.expect(response.inv_invoiceIssuedDate).to.match(datetimeRegex);",
+							"    pm.expect(response.inv_invoiceSeries).to.be.a('string');",
+							"    pm.expect(response.inv_invoiceNumber).to.be.a('number');",
+							"    pm.expect(pm.response.json().data).to.have.property('so_benh_an');",
+							"    pm.expect(response.inv_currencyCode).to.be.a('string');",
+							"    pm.expect(response.inv_exchangeRate).to.be.a('number');",
+							"    pm.expect(response.inv_paymentMethodName).to.be.a('string');",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerDisplayName');",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerLegalName');",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerTaxCode');",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerAddressLine');",
+							"    pm.expect(response.inv_TotalAmount).to.be.a('number');",
+							"    pm.expect(response.inv_discountAmount).to.be.a('number');",
+							"    pm.expect(response.inv_vatAmount).to.be.a('number');",
+							"    pm.expect(response.inv_TotalAmountWithoutVat).to.be.a('number');",
+							"    pm.expect(response.trang_thai).to.be.a('number');",
+							"    pm.expect(response.trang_thai_hd).to.be.a('number');",
+							"    pm.expect(response.sobaomat).to.be.a('string');",
+							"    pm.expect(pm.response.json().data).to.have.property('macqt');",
+							"    pm.expect(response.shdon).to.be.a('number');",
+							"    pm.expect(pm.response.json().data).to.have.property('ten');",
+							"    pm.expect(pm.response.json().data).to.have.property('tnmua');",
+							"    pm.expect(pm.response.json().data).to.have.property('mst');",
+							"    pm.expect(pm.response.json().data).to.have.property('dchi');",
+							"    pm.expect(response.hoadon68_id).to.be.a('string');",
+							"    pm.expect(response.is_tthdon).to.be.a('string');",
+							"    pm.expect(response.tthai).to.be.a('string');",
+							"    pm.expect(response.tgtcthue).to.be.a('number');",
+							"    pm.expect(response.tgtthue).to.be.a('number');",
+							"    pm.expect(response.tgtttbso).to.be.a('number');",
+							"    pm.expect(pm.response.json().data).to.have.property('is_success');",
+							"    pm.expect(pm.response.json().data).to.have.property('note_error');",
+							"    pm.expect(response.id).to.be.a('string');",
+							"    pm.expect(response.phidv).to.be.a('number');",
+							"});",
+							"pm.test(\"Response details contain all required fields\", function () {",
+							"    var responseData = pm.response.json().data;",
+							"",
+							"    responseData.details.data.forEach(function(item) {",
+							"        pm.expect(item.tchat).to.be.a('number');",
+							"        pm.expect(item).to.have.property('stt_rec0');",
+							"        pm.expect(item).to.have.property('inv_itemCode');",
+							"        pm.expect(item.inv_itemName).to.be.a('string');",
+							"        pm.expect(item).to.have.property('inv_unitCode');",
+							"        pm.expect(item).to.have.property('inv_quantity');",
+							"        pm.expect(item).to.have.property('inv_unitPrice');",
+							"        pm.expect(item).to.have.property('phidichvu');",
+							"        pm.expect(item.inv_discountPercentage).to.be.a('number');",
+							"        pm.expect(item.inv_discountAmount).to.be.a('number');",
+							"        pm.expect(item.inv_TotalAmountWithoutVat).to.be.a('number');",
+							"        pm.expect(item.ma_thue).to.be.a('string');",
+							"        pm.expect(item.inv_vatAmount).to.be.a('number');",
+							"        pm.expect(item.inv_TotalAmount).to.be.a('number');;",
+							"    });",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bear O87316arj5+Od3Fqyy5hzdBfIuPk73eKqpAzBSvv8sY=",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "TaxCode",
+						"value": "0106026495-998",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"inv_InvoiceAuth_id\": \"{{auth_id0}}\",\r\n    \"inv_invoiceIssuedDate\": \"{{today}}\",\r\n    \"inv_invoiceSeries\": \"{{randomKhhdon}}\",\r\n    \"so_benh_an\": \"123\",\r\n    \"inv_currencyCode\": \"VND\",\r\n    \"inv_exchangeRate\": 1,\r\n    \"inv_paymentMethodName\": \"TM/CK\",\r\n    \"inv_buyerDisplayName\": \"{{$randomFullName}}\",\r\n    \"inv_buyerLegalName\": \"M-INVOICE - KIỂM THỬ HĐĐT CÓ MÃ\",\r\n    \"inv_buyerTaxCode\": \"0106026495-999\",\r\n    \"inv_buyerAddressLine\": \"{{$randomStreetAddress}}\",\r\n    \"inv_buyerEmail\": null,\r\n    \"inv_buyerBankAccount\": \"{{$randomBankAccount}}\",\r\n    \"inv_buyerBankName\": \"{{$randomBankAccountName}}\",\r\n    \"inv_discountAmount\": 0,\r\n    \"inv_TotalAmountWithoutVat\": 0,\r\n    \"inv_vatAmount\": 0,\r\n    \"inv_TotalAmount\": 0,\r\n    \"data\": [\r\n        {\r\n            \"stt\": \"0001\",\r\n            \"ma\": \"555\",\r\n            \"inv_itemName\": \"{{randomPrdNa}}\",\r\n            \"inv_unitCode\": \"666\",\r\n            \"inv_unitName\": \"Cái\",\r\n            \"inv_unitPrice\": 1000000,\r\n            \"inv_quantity\": {{$randomInt}},\r\n            \"inv_TotalAmountWithoutVat\": 100000000,\r\n            \"inv_vatAmount\": 0,\r\n            \"inv_TotalAmount\": {{$randomInt}},\r\n            \"inv_promotion\": false,\r\n            \"inv_discountPercentage\": 5,\r\n            \"inv_discountAmount\": {{$randomInt}},\r\n            \"ma_thue\": \"0\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{tax_code}}.minvoice.pro/api/InvoiceApi78/DieuChinh",
+					"protocol": "https",
+					"host": [
+						"{{tax_code}}",
+						"minvoice",
+						"pro"
+					],
+					"path": [
+						"api",
+						"InvoiceApi78",
+						"DieuChinh"
+					],
+					"query": [
+						{
+							"key": "Conte",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Thay thế",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var token = pm.environment.get(\"token_create\") ;\r",
+							"\r",
+							"pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token });\r",
+							"// var invoiceAuthId = pm.environment.get(\"auth_id\");\r",
+							"// var invoiceSeries =pm.environment.get(\"randomKhhdon\");\r",
+							"// var invoiceNum = pm.environment.get(\"invNumber\");\r",
+							"// console.log(invoiceAuthId);\r",
+							"// console.log(invoiceSeries);\r",
+							"// console.log(invoiceNum); "
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// test for request\r",
+							"pm.test(\"request body has all top-level required fields and their types are correct\", function () {\r",
+							"    var requestBody = JSON.parse(request.data);\r",
+							"\r",
+							"    requestBody.data.forEach(function(dataItem) {\r",
+							"        pm.expect(dataItem.inv_originalId).to.be.a('string');\r",
+							"        pm.expect(dataItem).to.have.property('ngayvb');\r",
+							"        pm.expect(dataItem).to.have.property('ghi_chu');\r",
+							"        pm.expect(dataItem).to.have.property('sovb');\r",
+							"        pm.expect(dataItem.inv_invoiceSeries).to.be.a('string');\r",
+							"        pm.expect(dataItem.inv_invoiceIssuedDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);\r",
+							"        pm.expect(dataItem.inv_currencyCode).to.be.a('string');\r",
+							"        pm.expect(dataItem.inv_exchangeRate).to.be.a('number');\r",
+							"        pm.expect(dataItem).to.have.property('inv_buyerDisplayName');\r",
+							"        pm.expect(dataItem).to.have.property('inv_buyerLegalName');\r",
+							"        pm.expect(dataItem).to.have.property('inv_buyerTaxCode');\r",
+							"        pm.expect(dataItem).to.have.property('inv_buyerAddressLine');\r",
+							"        pm.expect(dataItem).to.have.property('inv_buyerEmail');\r",
+							"        pm.expect(dataItem).to.have.property('inv_buyerBankAccount');\r",
+							"        pm.expect(dataItem).to.have.property('inv_buyerBankName');\r",
+							"        pm.expect(dataItem).to.have.property('inv_paymentMethodName');\r",
+							"    });\r",
+							"});\r",
+							"pm.test(\"request body has all detail required fields and their types are correct\", function () {\r",
+							"    var requestBody = JSON.parse(request.data);\r",
+							"\r",
+							"    requestBody.data.forEach(function(dataItem) {\r",
+							"        dataItem.details.forEach(function(detailItem) {\r",
+							"            detailItem.data.forEach(function(item) {\r",
+							"                pm.expect(item.stt).to.be.a('string');\r",
+							"                pm.expect(item).to.have.property('ma');\r",
+							"                pm.expect(item.inv_itemName).to.be.a('string');\r",
+							"                pm.expect(item).to.have.property('inv_unitCode');\r",
+							"                pm.expect(item).to.have.property('inv_unitName');\r",
+							"                pm.expect(item).to.have.property('inv_unitPrice');\r",
+							"                pm.expect(item).to.have.property('inv_quantity');\r",
+							"                pm.expect(item).to.have.property('inv_TotalAmountWithoutVat');\r",
+							"                pm.expect(item).to.have.property('inv_vatAmount');\r",
+							"                pm.expect(item).to.have.property('inv_TotalAmount');\r",
+							"                pm.expect(item).to.have.property('inv_promotion');\r",
+							"                pm.expect(item).to.have.property('inv_discountPercentage');\r",
+							"                pm.expect(item).to.have.property('inv_discountAmount');\r",
+							"                pm.expect(item.ma_thue).to.be.a('string');\r",
+							"            });\r",
+							"        });\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"// Test for response\r",
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response is an object with data property\", function () {\r",
+							"    pm.expect(pm.response.json()).to.be.an('object').that.has.property('data');\r",
+							"});\r",
+							"pm.test(\"Response has property 'ok' with value true\", function () {\r",
+							"    pm.expect(pm.response.json().ok).to.be.true;\r",
+							"});\r",
+							"pm.test(\"all top-level response fields are in correct format\", function () {\r",
+							"    var response = pm.response.json().data;\r",
+							"    var datetimeRegex = /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/;\r",
+							"    pm.expect(pm.response.json().data).to.have.property('key_api');\r",
+							"    pm.expect(response.inv_invoiceAuth_id).to.be.a('string');\r",
+							"    pm.expect(response.inv_originalId).to.be.a('string');\r",
+							"    pm.expect(response.inv_invoiceIssuedDate).to.match(datetimeRegex);\r",
+							"    pm.expect(response.inv_invoiceSeries).to.be.a('string');\r",
+							"    pm.expect(response.inv_invoiceNumber).to.be.a('number');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('so_benh_an');\r",
+							"    pm.expect(response.inv_currencyCode).to.be.a('string');\r",
+							"    pm.expect(response.inv_exchangeRate).to.be.a('number');\r",
+							"    pm.expect(response.inv_paymentMethodName).to.be.a('string');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerDisplayName');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerLegalName');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerTaxCode');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerAddressLine');\r",
+							"    pm.expect(response.inv_TotalAmount).to.be.a('number');\r",
+							"    pm.expect(response.inv_discountAmount).to.be.a('number');\r",
+							"    pm.expect(response.inv_vatAmount).to.be.a('number');\r",
+							"    pm.expect(response.inv_TotalAmountWithoutVat).to.be.a('number');\r",
+							"    pm.expect(response.trang_thai).to.be.a('number');\r",
+							"    pm.expect(response.trang_thai_hd).to.be.a('number');\r",
+							"    pm.expect(response.sobaomat).to.be.a('string');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('macqt');\r",
+							"    pm.expect(response.shdon).to.be.a('number');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('ten');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('tnmua');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('mst');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('dchi');\r",
+							"    pm.expect(response.hoadon68_id).to.be.a('string');\r",
+							"    pm.expect(response.is_tthdon).to.be.a('string');\r",
+							"    pm.expect(response.tthai).to.be.a('string');\r",
+							"    pm.expect(response.tgtcthue).to.be.a('number');\r",
+							"    pm.expect(response.tgtthue).to.be.a('number');\r",
+							"    pm.expect(response.tgtttbso).to.be.a('number');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('is_success');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('note_error');\r",
+							"    pm.expect(response.id).to.be.a('string');\r",
+							"    pm.expect(response.phidv).to.be.a('number');\r",
+							"});\r",
+							"pm.test(\"Response details contain all required fields\", function () {\r",
+							"    var responseData = pm.response.json().data;\r",
+							"\r",
+							"    responseData.details.data.forEach(function(item) {\r",
+							"        pm.expect(item.tchat).to.be.a('number');\r",
+							"        pm.expect(item).to.have.property('stt_rec0');\r",
+							"        pm.expect(item).to.have.property('inv_itemCode');\r",
+							"        pm.expect(item.inv_itemName).to.be.a('string');\r",
+							"        pm.expect(item).to.have.property('inv_unitCode');\r",
+							"        pm.expect(item).to.have.property('inv_quantity');\r",
+							"        pm.expect(item).to.have.property('inv_unitPrice');\r",
+							"        pm.expect(item).to.have.property('phidichvu');\r",
+							"        pm.expect(item.inv_discountPercentage).to.be.a('number');\r",
+							"        pm.expect(item.inv_discountAmount).to.be.a('number');\r",
+							"        pm.expect(item.inv_TotalAmountWithoutVat).to.be.a('number');\r",
+							"        pm.expect(item.ma_thue).to.be.a('string');\r",
+							"        pm.expect(item.inv_vatAmount).to.be.a('number');\r",
+							"        pm.expect(item.inv_TotalAmount).to.be.a('number');;\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bear 0106026495998d3Fqyy5hzdBfIuPk73eKqpAzBSvv8sY=",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "TaxCode",
+						"value": "0106026495-998",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"data\":  [\r\n        {\r\n            \"inv_originalId\": \"{{auth_id1}}\",\r\n            \"ngayvb\":\"{{today}}\",\r\n            \"ghi_chu\":\"ggg\",\r\n            \"sovb\":\"sô vv\",\r\n            \"inv_invoiceSeries\": \"{{randomKhhdon}}\",\r\n            \"inv_invoiceIssuedDate\": \"{{today}}\",\r\n            \"inv_currencyCode\" :\"VND\",\r\n            \"inv_exchangeRate\" : 1,\r\n            \"inv_buyerDisplayName\" :\"ABC\",\r\n            \"inv_buyerLegalName\" :\"Công ty TNHH ABC\",\r\n            \"inv_buyerTaxCode\" :\"0102236276\",\r\n            \"inv_buyerAddressLine\": \"Hanoi\",\r\n            \"inv_buyerEmail\" :\"abc@gmail.com\",\r\n            \"inv_buyerBankAccount\" :\"123\",\r\n            \"inv_buyerBankName\" :\"aaaa\",\r\n            \"inv_paymentMethodName\": \"Tiền mặt/Chuyển khoản\",\r\n            \"details\" : [\r\n                {\r\n                    \"data\": [\r\n                        {\r\n                            \"stt\": \"001\",\r\n                            \"ma\": \"555\",\r\n                            \"inv_itemName\": \"Máy tính 221\",\r\n                            \"inv_unitCode\": \"666\",\r\n                            \"inv_unitName\": \"Cái\",\r\n                            \"inv_unitPrice\": 1000000,\r\n                            \"inv_quantity\": 1,\r\n                            \"inv_TotalAmountWithoutVat\": 1000000,\r\n                            \"inv_vatAmount\": 0,\r\n                            \"inv_TotalAmount\": 1000000,\r\n                            \"inv_promotion\": false,\r\n                            \"inv_discountPercentage\": 0,\r\n                            \"inv_discountAmount\":100000,\r\n                            \"ma_thue\":\"0\"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{tax_code}}.minvoice.pro/api/InvoiceApi78/ThayThe",
+					"protocol": "https",
+					"host": [
+						"{{tax_code}}",
+						"minvoice",
+						"pro"
+					],
+					"path": [
+						"api",
+						"InvoiceApi78",
+						"ThayThe"
+					],
+					"query": [
+						{
+							"key": "Conte",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Hủy hóa đơn",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var token = pm.environment.get(\"token_create\") ;\r",
+							"pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token });\r",
+							"// var invoiceAuthId = pm.environment.get(\"auth_id\");\r",
+							"// var invoiceSeries =pm.environment.get(\"randomKhhdon\");\r",
+							"// var invoiceNum = pm.environment.get(\"invNumber\");\r",
+							"// console.log(invoiceAuthId);\r",
+							"// console.log(invoiceSeries);\r",
+							"// console.log(invoiceNum); "
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has code property equal to '00' and ok property is true\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.code).to.equal('00');\r",
+							"    pm.expect(jsonData.ok).to.be.true;\r",
+							"});\r",
+							"var req = JSON.parse(request.data);\r",
+							"pm.test(\"inv_InvoiceAuth_id and ghi_chu in body request are type of string\", function () {\r",
+							"     pm.expect(req.inv_InvoiceAuth_id).to.be.a('string');\r",
+							"     pm.expect(req.ghi_chu).to.be.a('string');\r",
+							"});\r",
+							"pm.test(\"ngayvb in body request are type of Datetime\", function () {\r",
+							"     pm.expect(req.ngayvb).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);\r",
+							"     \r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bear 2717F2F9131748FAB215FC7DFF7DA4CC",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "TaxCode",
+						"value": "0106026495-999",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"inv_InvoiceAuth_id\": \"{{auth_id2}}\",\r\n    \"ngayvb\": \"{{today}}\",\r\n    \"ghi_chu\": \"AAA\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{tax_code}}.minvoice.pro/api/InvoiceApi78/HuyHoaDon",
+					"protocol": "https",
+					"host": [
+						"{{tax_code}}",
+						"minvoice",
+						"pro"
+					],
+					"path": [
+						"api",
+						"InvoiceApi78",
+						"HuyHoaDon"
+					],
+					"query": [
+						{
+							"key": "Conte",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Info By Number",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var token = pm.environment.get(\"token_create\") ;\r",
+							"//console.log(token);\r",
+							"pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token });"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response has property 'ok' with value true\", function () {\r",
+							"    pm.expect(pm.response.json().ok).to.be.true;\r",
+							"});\r",
+							"pm.test(\"Response is a JSON object with data property\", function () {\r",
+							"    pm.expect(pm.response.json()).to.be.an('object').that.has.property('data');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"all response of top-level fields are in correct format\", function () {\r",
+							"    var response = pm.response.json().data;\r",
+							"    var datetimeRegex = /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/;\r",
+							"    pm.expect(pm.response.json().data).to.have.property('key_api');\r",
+							"    pm.expect(response.inv_invoiceAuth_id).to.be.a('string');\r",
+							"    pm.expect(response.inv_originalId).to.be.a('string');\r",
+							"    pm.expect(response.inv_invoiceIssuedDate).to.match(datetimeRegex);\r",
+							"    pm.expect(response.inv_invoiceSeries).to.be.a('string');\r",
+							"    pm.expect(response.inv_invoiceNumber).to.be.a('number');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('so_benh_an');\r",
+							"    pm.expect(response.inv_currencyCode).to.be.a('string');\r",
+							"    pm.expect(response.inv_exchangeRate).to.be.a('number');\r",
+							"    pm.expect(response.inv_paymentMethodName).to.be.a('string');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerDisplayName');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerLegalName');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerTaxCode');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('inv_buyerAddressLine');\r",
+							"    pm.expect(response.inv_TotalAmount).to.be.a('number');\r",
+							"    pm.expect(response.inv_discountAmount).to.be.a('number');\r",
+							"    pm.expect(response.inv_vatAmount).to.be.a('number');\r",
+							"    pm.expect(response.inv_TotalAmountWithoutVat).to.be.a('number');\r",
+							"    pm.expect(response.trang_thai).to.be.a('number');\r",
+							"    pm.expect(response.trang_thai_hd).to.be.a('number');\r",
+							"    pm.expect(response.sobaomat).to.be.a('string');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('macqt');\r",
+							"    pm.expect(response.shdon).to.be.a('number');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('ten');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('tnmua');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('mst');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('dchi');\r",
+							"    pm.expect(response.hoadon68_id).to.be.a('string');\r",
+							"    pm.expect(response.is_tthdon).to.be.a('string');\r",
+							"    pm.expect(response.tthai).to.be.a('string');\r",
+							"    pm.expect(response.tgtcthue).to.be.a('number');\r",
+							"    pm.expect(response.tgtthue).to.be.a('number');\r",
+							"    pm.expect(response.tgtttbso).to.be.a('number');\r",
+							"    pm.expect(response.is_success).to.be.a('string');\r",
+							"    pm.expect(response.note_error).to.be.a('string');\r",
+							"    pm.expect(response.id).to.be.a('string');\r",
+							"    pm.expect(pm.response.json().data).to.have.property('phidv');\r",
+							"});\r",
+							"pm.test(\"Response details contain all required fields and their types are correct\", function () {\r",
+							"    var responseData = pm.response.json().data;\r",
+							"\r",
+							"    responseData.details.data.forEach(function(item) {\r",
+							"        pm.expect(item.tchat).to.be.a('number');\r",
+							"        pm.expect(item).to.have.property('stt_rec0');\r",
+							"        pm.expect(item).to.have.property('inv_itemCode');\r",
+							"        pm.expect(item.inv_itemName).to.be.a('string');\r",
+							"        pm.expect(item).to.have.property('inv_unitCode');\r",
+							"        pm.expect(item).to.have.property('inv_quantity');\r",
+							"        pm.expect(item).to.have.property('inv_unitPrice');\r",
+							"        pm.expect(item).to.have.property('phidichvu');\r",
+							"        pm.expect(item).to.have.property('inv_discountPercentage')\r",
+							"        pm.expect(item).to.have.property('inv_discountAmount')\r",
+							"        pm.expect(item.inv_TotalAmountWithoutVat).to.be.a('number');\r",
+							"        pm.expect(item.ma_thue).to.be.a('string');\r",
+							"        pm.expect(item.inv_vatAmount).to.be.a('number');\r",
+							"        pm.expect(item.inv_TotalAmount).to.be.a('number');;\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bear O87316arj5+Od3Fqyy5hzdBfIuPk73eKqpAzBSvv8sY=",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "TaxCode",
+						"value": "0106026495-998",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://{{tax_code}}.minvoice.pro/api/InvoiceApi78/GetInfoInvoice?number={{invNumber}}&seri={{randomKhhdon}}",
+					"protocol": "https",
+					"host": [
+						"{{tax_code}}",
+						"minvoice",
+						"pro"
+					],
+					"path": [
+						"api",
+						"InvoiceApi78",
+						"GetInfoInvoice"
+					],
+					"query": [
+						{
+							"key": "number",
+							"value": "{{invNumber}}"
+						},
+						{
+							"key": "seri",
+							"value": "{{randomKhhdon}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Info By ID",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var token = pm.environment.get(\"token_create\") ;\r",
+							"pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token });"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response has property 'ok' with value true\", function () {\r",
+							"    pm.expect(pm.response.json().ok).to.be.true;\r",
+							"});\r",
+							"pm.test(\"Response is a JSON object with data property\", function () {\r",
+							"    pm.expect(pm.response.json()).to.be.an('object').that.has.property('data');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"all response of top-level fields are in correct format\", function () {\r",
+							"    var response = pm.response.json().data;\r",
+							"\r",
+							"    // Define regex patterns for fields with specific formats\r",
+							"    var datetimeRegex = /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/;\r",
+							"\r",
+							"    // Validate each field format\r",
+							"    pm.expect(response.key_api).to.be.a('string');\r",
+							"    pm.expect(response.inv_invoiceAuth_id).to.be.a('string');\r",
+							"    pm.expect(response.inv_originalId).to.be.a('string');\r",
+							"    pm.expect(response.inv_invoiceIssuedDate).to.match(datetimeRegex);\r",
+							"    pm.expect(response.inv_invoiceSeries).to.be.a('string');\r",
+							"    pm.expect(response.inv_invoiceNumber).to.be.a('number');\r",
+							"    pm.expect(response.so_benh_an).to.be.a('string');\r",
+							"    pm.expect(response.inv_currencyCode).to.be.a('string');\r",
+							"    pm.expect(response.inv_exchangeRate).to.be.a('number');\r",
+							"    pm.expect(response.inv_paymentMethodName).to.be.a('string');\r",
+							"    pm.expect(response.inv_buyerDisplayName).to.be.a('string');\r",
+							"    pm.expect(response.inv_buyerLegalName).to.be.a('string');\r",
+							"    pm.expect(response.inv_buyerTaxCode).to.be.a('string');\r",
+							"    pm.expect(response.inv_buyerAddressLine).to.be.a('string');\r",
+							"    pm.expect(response.inv_buyerBankAccount).to.be.a('string');\r",
+							"    pm.expect(response.inv_buyerBankName).to.be.a('string');\r",
+							"    pm.expect(response.inv_TotalAmount).to.be.a('number');\r",
+							"    pm.expect(response.inv_discountAmount).to.be.a('number');\r",
+							"    pm.expect(response.inv_vatAmount).to.be.a('number');\r",
+							"    pm.expect(response.inv_TotalAmountWithoutVat).to.be.a('number');\r",
+							"    pm.expect(response.trang_thai).to.be.a('number');\r",
+							"    pm.expect(response.trang_thai_hd).to.be.a('number');\r",
+							"    pm.expect(response.sobaomat).to.be.a('string');\r",
+							"    pm.expect(response.macqt).to.be.a('string');\r",
+							"    pm.expect(response.shdon).to.be.a('number');\r",
+							"    pm.expect(response.ten).to.be.a('string');\r",
+							"    pm.expect(response.tnmua).to.be.a('string');\r",
+							"    pm.expect(response.mst).to.be.a('string');\r",
+							"    pm.expect(response.dchi).to.be.a('string');\r",
+							"    pm.expect(response.hoadon68_id).to.be.a('string');\r",
+							"    pm.expect(response.is_tthdon).to.be.a('string');\r",
+							"    pm.expect(response.tthai).to.be.a('string');\r",
+							"    pm.expect(response.tgtcthue).to.be.a('number');\r",
+							"    pm.expect(response.tgtthue).to.be.a('number');\r",
+							"    pm.expect(response.tgtttbso).to.be.a('number');\r",
+							"    pm.expect(response.is_success).to.be.a('string');\r",
+							"    pm.expect(response.note_error).to.be.a('string');\r",
+							"    pm.expect(response.id).to.be.a('string');\r",
+							"    pm.expect(response.phidv).to.be.a('number');\r",
+							"});\r",
+							"pm.test(\"Response details contain all required fields\", function () {\r",
+							"    var responseData = pm.response.json().data;\r",
+							"\r",
+							"    responseData.details.data.forEach(function(item) {\r",
+							"        pm.expect(item.tchat).to.be.a('number');\r",
+							"        pm.expect(item).to.have.property('stt_rec0');\r",
+							"        pm.expect(item).to.have.property('inv_itemCode');\r",
+							"        pm.expect(item.inv_itemName).to.be.a('string');\r",
+							"        pm.expect(item).to.have.property('inv_unitCode');\r",
+							"        pm.expect(item).to.have.property('inv_quantity');\r",
+							"        pm.expect(item).to.have.property('inv_unitPrice');\r",
+							"        pm.expect(item).to.have.property('phidichvu');\r",
+							"        pm.expect(item.inv_discountPercentage).to.be.a('number');\r",
+							"        pm.expect(item.inv_discountAmount).to.be.a('number');\r",
+							"        pm.expect(item.inv_TotalAmountWithoutVat).to.be.a('number');\r",
+							"        pm.expect(item.ma_thue).to.be.a('string');\r",
+							"        pm.expect(item.inv_vatAmount).to.be.a('number');\r",
+							"        pm.expect(item.inv_TotalAmount).to.be.a('number');;\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bear O87316arj5+Od3Fqyy5hzdBfIuPk73eKqpAzBSvv8sY=",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "TaxCode",
+						"value": "0106026495-998",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://{{tax_code}}.minvoice.pro/api/InvoiceApi78/GetInfoInvoice?id={{auth_id}}",
+					"protocol": "https",
+					"host": [
+						"{{tax_code}}",
+						"minvoice",
+						"pro"
+					],
+					"path": [
+						"api",
+						"InvoiceApi78",
+						"GetInfoInvoice"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{auth_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Tải XML",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var token = pm.environment.get(\"token_create\") ;\r",
+							"\r",
+							"pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token });"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response has property 'ok' with value true\", function () {\r",
+							"    pm.expect(pm.response.json().ok).to.be.true;\r",
+							"});\r",
+							"pm.test(\"Response is a JSON object with data property\", function () {\r",
+							"    pm.expect(pm.response.json()).to.be.an('object').that.has.property('data');\r",
+							"});\r",
+							"pm.environment.set(\"countNV\",0)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bear 2717F2F9131748FAB215FC7DFF7DA4CC",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "TaxCode",
+						"value": "0106026495-999",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://{{tax_code}}.minvoice.pro/api/InvoiceApi78/ExportXml?id={{auth_id}}",
+					"protocol": "https",
+					"host": [
+						"{{tax_code}}",
+						"minvoice",
+						"pro"
+					],
+					"path": [
+						"api",
+						"InvoiceApi78",
+						"ExportXml"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{auth_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Tải PDF",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var token = pm.environment.get(\"token_create\") ;\r",
+							"\r",
+							"pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + token });"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has Content-Type header set to application/pdf\", function () {",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equal('application/pdf');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bear 2717F2F9131748FAB215FC7DFF7DA4CC",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "TaxCode",
+						"value": "0106026495-999",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://{{tax_code}}.minvoice.pro/api/InvoiceApi78/PrintInvoice?keyApi={{key_api}}&?id={{auth_id}}",
+					"protocol": "https",
+					"host": [
+						"{{tax_code}}",
+						"minvoice",
+						"pro"
+					],
+					"path": [
+						"api",
+						"InvoiceApi78",
+						"PrintInvoice"
+					],
+					"query": [
+						{
+							"key": "keyApi",
+							"value": "{{key_api}}"
+						},
+						{
+							"key": "?id",
+							"value": "{{auth_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "tax_code",
+			"value": "0106026495-998",
+			"type": "string"
+		},
+		{
+			"key": "auth_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "token_create",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "khhdonValues",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "randomKhhdon",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "productNames",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "randomPrdNa",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "today",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "key_api",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "count",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "countNV",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "invNumber",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "fromday",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "auth_id1",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "auth_id2",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "auth_id0",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
