@@ -2214,7 +2214,7 @@
 			"response": []
 		},
 		{
-			"name": "Tải PDF",
+			"name": "Down PDF",
 			"event": [
 				{
 					"listen": "prerequest",
