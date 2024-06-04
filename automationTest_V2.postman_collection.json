@@ -161,7 +161,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bear  {{token_create}}",
+						"value": "Bearer  {{token_create}}",
 						"type": "text",
 						"disabled": true
 					},
